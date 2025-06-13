@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>רשימת תכנים</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <nav>
+    <a href="../index.html">דף הבית</a>
+    <a href="upload_content.html" id="uploadContentBtn" style="display: none;">➕ העלאת תוכן חדש</a>
+  </nav>
+
+  <main>
+    <div class="content-filter">
+      <label for="categoryFilter">סינון לפי קטגוריה:</label>
+      <select id="categoryFilter" onchange="filterCards()">
+        <option value="">הצג הכול</option>
+        <option value="רגשי">רגשי</option>
+        <option value="חינוכי">חינוכי</option>
+        <option value="חברתי">חברתי</option>
+      </select>
+
+      <label for="audienceFilter" style="margin-right: 20px;">סינון לפי קהל יעד:</label>
+      <select id="audienceFilter" onchange="filterCards()">
+        <option value="">הצג הכול</option>
+        <option value="גיל הרך">גיל הרך</option>
+        <option value="ילדים">ילדים</option>
+        <option value="נוער">נוער</option>
+      </select>
+    </div>
+
+    <h1>פורטל התוכן של עמותת חמניות</h1>
+
+    <div id="cardsContainer" class="cards-container">
+      <!-- התכנים ייטענו כאן דינמית -->
+    </div>
+  </main>
+
+  <footer style="text-align:center; padding:20px; background:#ffe066; margin-top:40px;">
+    © 2025 עמותת חמניות - כל הזכויות שמורות
+  </footer>
+
+  <script>
+    // הצגת כפתור העלאה לפי תפקיד
+    const role = localStorage.getItem("role");
+    if (role === "admin" || role === "volunteer") {
+      document.getElementById("uploadContentBtn").style.display = "inline-block";
+    }
+  </script>
+
+  <script src="../js/content_portal.js"></script>
+</body>
+</html>

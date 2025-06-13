@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>רישום ילד חדש</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="../index.html">דף הבית</a></li>
+        <li><a href="profile_list.html">רשימת פרופילים</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>רישום ילד חדש</h1>
+    <form id="childForm" class="form-child">
+      <label>שם פרטי:
+        <input type="text" name="first_name" placeholder="לדוג׳: דוד" required>
+      </label>
+
+      <label>שם משפחה:
+        <input type="text" name="last_name" placeholder="לדוג׳: כהן" required>
+      </label>
+
+      <label>תאריך לידה:
+        <input type="date" name="birth_date" required>
+      </label>
+
+      <label>כתובת מגורים:
+        <input type="text" name="address" placeholder="לדוג׳: הרצל 12, פתח תקווה">
+      </label>
+
+      <label>שם אפוטרופוס:
+        <input type="text" name="guardian_name" placeholder="לדוג׳: יעל לוי" required>
+      </label>
+
+      <label>טלפון אפוטרופוס:
+        <input type="tel" name="guardian_phone" id="guardianPhone" placeholder="לדוג׳: 0521234567" required>
+      </label>
+
+      <label>מידע תיק אישי:
+        <textarea name="personal_info" rows="4" placeholder="לדוג׳: רגישות לגלוטן, עבר טראומה, זקוק לתמיכה רגשית וכו׳"></textarea>
+      </label>
+
+      <button type="submit">שמור פרופיל</button>
+    </form>
+
+    <p id="responseMessage" style="text-align: center; margin-top: 20px;"></p>
+  </main>
+
+  <footer>
+    <p>© 2025 עמותת חמניות - כל הזכויות שמורות</p>
+  </footer>
+
+  <script>
+    document.getElementById("childForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const phoneInput = document.getElementById("guardianPhone");
+      let phone = phoneInput.value.trim();
+
+      // הוספת קידומת +972 אם לא קיימת
+      if (!phone.startsWith("+972")) {
+        if (phone.startsWith("0")) {
+          phone = "+972" + phone.slice(1);
+        } else {
+          phone = "+972" + phone;
+        }
+      }
+
+      phoneInput.value = phone;
+
+    });
+  </script>
+
+  <script src="../js/submit_child.js"></script>
+</body>
+</html>

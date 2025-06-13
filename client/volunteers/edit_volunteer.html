@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <title>עריכת פרופיל מתנדב</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="../index.html">דף הבית</a></li>
+        <li><a href="volunteer_list.html">⬅ חזרה לרשימת מתנדבים</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="form-container">
+    <h1>✏️ עריכת פרטי מתנדב</h1>
+
+    <form id="editVolunteerForm">
+      <input type="hidden" id="volunteer_id" />
+
+      <label for="full_name">שם מלא:</label>
+      <input type="text" id="full_name" name="full_name" required>
+
+      <label for="age">גיל:</label>
+      <input type="number" id="age" name="age" required>
+
+      <label for="email">אימייל:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="phone">טלפון:</label>
+      <input type="tel" id="phone" name="phone" required>
+
+      <label for="area">אזור מועדף:</label>
+      <input type="text" id="area" name="area">
+
+      <label for="group">קבוצת גיל:</label>
+      <select id="group" name="group" required>
+        <option value="">-- בחר קבוצה --</option>
+      </select>
+
+      <label for="interests">תחומי עניין:</label>
+      <textarea id="interests" name="interests" rows="3"></textarea>
+
+      <button type="submit">💾 שמור שינויים</button>
+      <div id="responseMessage" class="success"></div>
+    </form>
+  </div>
+
+  <footer>
+    © 2025 עמותת חמניות - כל הזכויות שמורות
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const params = new URLSearchParams(window.location.search);
+      const volunteerId = params.get("id");
+      const form = document.getElementById("editVolunteerForm");
+      const responseMessage = document.getElementById("responseMessage");
+
+      if (!volunteerId) {
+        alert("❌ מזהה מתנדב חסר בכתובת.");
+        return;
+      }
+
+      // טען קבוצות לתוך <select>
+      async function loadGroups(selectedGroupId = "") {
+        try {
+          const res = await fetch("http://localhost:3000/api/groups");
+          const groups = await res.json();
+          const select = document.getElementById("group");
+          select.innerHTML = `<option value="">-- בחר קבוצה --</option>`;
+
+          groups.forEach(group => {
+            const option = document.createElement("option");
+            option.value = group._id;
+            option.textContent = group.age_category;
+            if (group._id === selectedGroupId) {
+              option.selected = true;
+            }
+            select.appendChild(option);
+          });
+
+        } catch (err) {
+          alert("⚠️ שגיאה בטעינת קבוצות");
+          console.error(err);
+        }
+      }
+
+      // טען את פרטי המתנדב
+      try {
+        const res = await fetch(`http://localhost:3000/api/volunteers/${volunteerId}`);
+        const volunteer = await res.json();
+
+        document.getElementById("volunteer_id").value = volunteer._id;
+        document.getElementById("full_name").value = volunteer.full_name || "";
+        document.getElementById("age").value = volunteer.age || "";
+        document.getElementById("email").value = volunteer.email || "";
+        document.getElementById("phone").value = volunteer.phone || "";
+        document.getElementById("area").value = volunteer.area || "";
+        document.getElementById("interests").value = volunteer.interests || "";
+
+        await loadGroups(volunteer.group?._id);
+      } catch (err) {
+        alert("⚠️ שגיאה בטעינת פרטי המתנדב");
+        console.error(err);
+        return;
+      }
+
+      // שליחת הטופס לעדכון
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+          const res = await fetch(`http://localhost:3000/api/volunteers/${volunteerId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+          });
+
+          const result = await res.json();
+          if (res.ok) {
+            responseMessage.textContent = "✅ השינויים נשמרו בהצלחה!";
+            setTimeout(() => {
+              window.location.href = "volunteer_list.html";
+            }, 1000);
+          } else {
+            responseMessage.textContent = "❌ שגיאה בשמירת השינויים.";
+            console.error(result);
+          }
+        } catch (err) {
+          responseMessage.textContent = "❌ שגיאת רשת.";
+          console.error(err);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

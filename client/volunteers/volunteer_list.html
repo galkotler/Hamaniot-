@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>רשימת מתנדבים</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .card-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin: 20px;
+    }
+
+    .volunteer-card {
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 15px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .volunteer-card:hover {
+      transform: translateY(-5px);
+      background-color: #f9f9f9;
+    }
+
+    .volunteer-card h3 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .volunteer-card p {
+      margin: 6px 0;
+    }
+
+    .card-buttons {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .card-buttons a,
+    .card-buttons button {
+      margin-top: 6px;
+      padding: 6px 12px;
+      background-color: #f0c14b;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      color: black;
+    }
+
+    .card-buttons button:hover,
+    .card-buttons a:hover {
+      background-color: #ddb347;
+    }
+
+    .assign-btn {
+      display: block;
+      width: fit-content;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="../index.html">דף הבית</a></li>
+        <li><a href="../children/profile_list.html">פרופילי ילדים</a></li>
+        <li><a href="../content/content_list.html">פורטל תוכן</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <h1>🌻 רשימת מתנדבים</h1>
+  <input type="text" id="searchInput" placeholder="חפש מתנדב לפי שם..." />
+
+  <div id="volunteerCards" class="card-list"></div>
+
+  <a href="add_volunteer.html" class="assign-btn">➕ הוספת מתנדב חדש</a>
+
+  <script>
+    const role = localStorage.getItem("role");
+
+    if (localStorage.getItem("refreshVolunteers") === "true") {
+    localStorage.removeItem("refreshVolunteers");
+    location.reload(); 
+  }
+
+    async function loadVolunteers() {
+      const container = document.getElementById("volunteerCards");
+      container.innerHTML = "";
+
+
+
+      try {
+        const res = await fetch("/api/volunteers");
+        const volunteers = await res.json();
+
+        console.log("volunteers =>", volunteers);
+
+        volunteers.forEach(v => {
+          const card = document.createElement("div");
+          card.className = "volunteer-card";
+
+          const groupLabel = v.group?.age_category || "לא שובץ";
+          const hasChildren = Array.isArray(v.assigned_children) && v.assigned_children.length > 0;
+
+          card.innerHTML = `
+            <h3>${v.full_name}</h3>
+            <p><strong>גיל:</strong> ${v.age}</p>
+            <p><strong>אימייל:</strong> ${v.email}</p>
+            <p><strong>טלפון:</strong> ${v.phone}</p>
+            <p><strong>אזור מועדף:</strong> ${v.area || ""}</p>
+            <p><strong>תחומי עניין:</strong> ${v.interests || ""}</p>
+            <p><strong>קבוצת גיל:</strong> ${groupLabel}</p>
+            <p><strong>שיבוץ ילדים:</strong> ${hasChildren ? '✔️ קיים שיבוץ' : '⛔ לא שובץ לילדים'}</p>
+
+            <div class="card-buttons">
+              <a href="volunteer_profile.html?id=${v._id}">👁️ צפייה בפרופיל</a>
+              ${!hasChildren ? `<a href="assign_student.html?id=${v._id}">📌 בצע שיבוץ</a>` : ""}
+              ${role === "admin" ? `<button onclick="deleteVolunteer('${v._id}')">🗑️ מחק</button>` : ""}
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+
+      } catch (err) {
+        container.innerHTML = `<p>⚠ שגיאה בטעינת מתנדבים</p>`;
+        console.error(err);
+      }
+    }
+
+    async function deleteVolunteer(id) {
+      if (!confirm("האם אתה בטוח שברצונך למחוק את המתנדב?")) return;
+
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(`/api/volunteers/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+
+        if (!res.ok) throw new Error("מחיקה נכשלה");
+        alert("🗑️ המתנדב נמחק בהצלחה");
+        loadVolunteers();
+      } catch (err) {
+        alert("⚠ שגיאה במחיקת מתנדב");
+        console.error(err);
+      }
+    }
+
+    // סינון לפי שם
+    document.getElementById("searchInput").addEventListener("input", function () {
+      const value = this.value.toLowerCase();
+      document.querySelectorAll(".volunteer-card").forEach(card => {
+        const name = card.querySelector("h3").textContent.toLowerCase();
+        card.style.display = name.includes(value) ? "" : "none";
+      });
+    });
+
+    
+    loadVolunteers();
+  </script>
+
+  <footer>
+    © 2025 עמותת חמניות - כל הזכויות שמורות
+  </footer>
+</body>
+</html>

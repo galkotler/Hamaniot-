@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>דוח נוכחות</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <a href="../index.html">🏠 דף הבית</a>
+      <a href="volunteer_dashboard.html">⬅ חזרה ללוח הבקרה</a>
+    </nav>
+  </header>
+
+  <main class="report-container">
+    <h1>📝 דוח נוכחות קבוצתי</h1>
+
+    <form id="attendanceForm">
+      <label for="activityDate">תאריך הפעילות:</label>
+      <input type="date" id="activityDate" name="activityDate" required>
+
+      <h3>בחר את הילדים שנכחו בפעילות:</h3>
+      <div id="childrenList">
+        <!-- נטען דינמית -->
+      </div>
+
+      <button type="submit">שלח דוח נוכחות</button>
+    </form>
+
+    <div id="message" style="text-align: center; margin-top: 20px; font-weight: bold;"></div>
+  </main>
+
+  <script>
+    let allChildren = [];
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const groupId = localStorage.getItem("group");
+      const res = await fetch("/api/children", {
+        headers: {
+          role: "volunteer",
+          group: groupId
+        }
+      });
+
+      allChildren = await res.json();
+      const container = document.getElementById("childrenList");
+
+      allChildren.forEach(child => {
+        const label = document.createElement("label");
+        label.innerHTML = `
+          <input type="checkbox" name="presentChildren" value="${child._id}">
+          ${child.first_name} ${child.last_name}<br>
+        `;
+        container.appendChild(label);
+      });
+    });
+
+    document.getElementById("attendanceForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const presentIds = [...document.querySelectorAll("input[name='presentChildren']:checked")].map(cb => cb.value);
+      const absentIds = allChildren
+        .filter(child => !presentIds.includes(child._id))
+        .map(child => child._id);
+
+      const volunteerId = localStorage.getItem("volunteer_id");
+      const date = document.getElementById("activityDate").value;
+
+      const reportData = {
+        type: "נוכחות",
+        volunteer: volunteerId,
+        child: null, // לא נדרש ספציפי - זה דוח קבוצתי
+        content: `דוח נוכחות ליום ${date}:\nנוכחים: ${presentIds.length} ילדים\nנעדרים: ${absentIds.length} ילדים.`,
+        date,
+        present_children: presentIds,
+        absent_children: absentIds
+      };
+
+      const res = await fetch("/api/reports/group-attendance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reportData)
+      });
+
+      if (res.ok) {
+        document.getElementById("message").textContent = "✅ הדוח נשלח בהצלחה!";
+        document.getElementById("attendanceForm").reset();
+      } else {
+        document.getElementById("message").textContent = "❌ שגיאה בשליחת הדוח";
+      }
+    });
+  </script>
+
+</body>
+</html>

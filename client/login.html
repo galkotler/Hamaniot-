@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <title>התחברות למערכת חמניות</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="container">
+    <h2 class="page-title">🌻 התחברות למערכת חמניות</h2>
+
+    <form id="login-form" class="form-box">
+      <label for="email">אימייל:</label>
+      <input type="email" id="email" name="email" placeholder="example@email.com" required />
+
+      <label for="password">סיסמה:</label>
+      <input type="password" id="password" name="password" placeholder="••••••••" required />
+
+      <button type="submit" class="btn">התחבר</button>
+    </form>
+
+    <div id="error-message" class="error-message" style="display: none;"></div>
+  </div>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>

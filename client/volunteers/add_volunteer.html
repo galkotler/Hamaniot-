@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>רישום מתנדב</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="volunteer-registration">
+  <header>
+    <nav>
+      <ul>
+        <li><a href="../index.html">דף הבית</a></li>
+        <li><a href="volunteer_list.html">⬅ חזרה לרשימת מתנדבים</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <h1>🌻 רישום מתנדב חדש</h1>
+
+  <form id="volunteerForm" class="volunteer-form">
+    <label for="name">שם מלא:</label>
+    <input type="text" id="name" name="full_name" required>
+
+    <label for="age">גיל:</label>
+    <input type="number" id="age" name="age" required>
+
+    <label for="email">אימייל:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="phone">טלפון:</label>
+    <input type="tel" id="phone" name="phone" required>
+
+    <label for="area">אזור מועדף:</label>
+    <input type="text" id="area" name="area" placeholder="לדוגמה: תל אביב, חיפה">
+
+    <label for="group">קבוצת גיל:</label>
+    <select id="group" name="group" required>
+      <option value="">-- בחר קבוצה --</option>
+    </select>
+
+    <label for="interests">תחומי עניין / יכולות:</label>
+    <textarea id="interests" name="interests" rows="3"></textarea>
+
+    <button type="submit">שמור מתנדב</button>
+    <div id="successMessage" class="success"></div>
+  </form>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const role = localStorage.getItem("role");
+      if (role !== "admin") {
+        alert("גישה רק למנהלים.");
+        window.location.href = "../index.html";
+        return;
+      }
+
+      const form = document.getElementById("volunteerForm");
+      const successMessage = document.getElementById("successMessage");
+
+      async function loadGroups() {
+        try {
+          const res = await fetch("http://localhost:3000/api/groups");
+          const groups = await res.json();
+          const groupSelect = document.getElementById("group");
+
+          // נוודא שיש לפחות קבוצה אחת
+          if (groups.length === 0) {
+            alert("⚠️ לא קיימות קבוצות במערכת. צור קבוצות קודם!");
+            return;
+          }
+
+          groups.forEach(group => {
+            const option = document.createElement("option");
+            option.value = group._id; // שולחים את ה-ID למסד
+            option.textContent = group.age_category;
+            groupSelect.appendChild(option);
+          });
+        } catch (err) {
+          alert("⚠️ שגיאה בטעינת קבוצות");
+          console.error(err);
+        }
+      }
+
+      loadGroups();
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        // בדיקה מקדימה
+        if (!data.group) {
+          alert("❗ יש לבחור קבוצת גיל.");
+          return;
+        }
+
+        try {
+          const res = await fetch("http://localhost:3000/api/volunteers", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+          });
+
+          const result = await res.json();
+          if (res.ok) {
+            successMessage.textContent = "✅ המתנדב נשמר בהצלחה!";
+            setTimeout(() => {
+              window.location.href = "volunteer_list.html";
+            }, 1000);
+          } else {
+            successMessage.textContent = "❌ שגיאה בשמירת המתנדב: " + (result.message || "");
+            console.error(result);
+          }
+        } catch (err) {
+          successMessage.textContent = "❌ שגיאת רשת.";
+          console.error(err);
+        }
+      });
+    });
+  </script>
+
+  <footer>
+    © 2025 עמותת חמניות - כל הזכויות שמורות
+  </footer>
+</body>
+</html>

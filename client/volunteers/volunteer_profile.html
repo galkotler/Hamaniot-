@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>פרופיל מתנדב</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .delete-button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .delete-button:hover {
+      background-color: #d32f2f;
+    }
+    .edit-button {
+      background-color: #f0c14b;
+      color: black;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 10px;
+      text-decoration: none;
+    }
+    .edit-button:hover {
+      background-color: #ddb347;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- סרגל ניווט -->
+  <header>
+    <nav>
+      <ul>
+        <li><a href="../index.html">🏠 דף הבית</a></li>
+        <li><a href="volunteer_list.html">⬅ חזרה לרשימת מתנדבים</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="profile-container">
+    <h1>פרופיל מתנדב</h1>
+
+    <div class="profile-info">
+      <p><span class="label">שם מלא:</span> <span id="fullName"></span></p>
+      <p><span class="label">גיל:</span> <span id="age"></span></p>
+      <p><span class="label">אימייל:</span> <span id="email"></span></p>
+      <p><span class="label">טלפון:</span> <span id="phone"></span></p>
+      <p><span class="label">אזור מועדף:</span> <span id="area"></span></p>
+      <p><span class="label">תחומי עניין:</span> <span id="interests"></span></p>
+      <p><span class="label">קבוצת שיבוץ:</span> <span id="assignedGroup"></span></p>
+    </div>
+
+    <!-- שיבוץ לקבוצה - מוצג רק למנהל -->
+    <div id="groupAssignmentSection" style="display:none; margin-top: 20px; text-align: center;">
+      <label for="groupSelect">שיבוץ לקבוצה:</label>
+      <select id="groupSelect">
+        <option value="">-- בחר קבוצה --</option>
+      </select>
+      <button id="assignGroupBtn">שמור</button>
+    </div>
+
+    <div class="action-buttons" style="margin-top: 20px; text-align: center;">
+      <a id="editBtn" class="edit-button" href="#" style="display: none;">✏️ עריכת פרופיל</a>
+      <button id="deleteBtn" class="delete-button" style="display: none;">🗑️ מחיקת מתנדב</button>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 עמותת חמניות - כל הזכויות שמורות
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const checkRes = await fetch("http://localhost:3000/api/auth/check", {
+          credentials: "include"
+        });
+
+        if (!checkRes.ok) {
+          alert("⚠️ לא מחובר למערכת");
+          window.location.href = "../index.html";
+          return;
+        }
+
+        const user = await checkRes.json();
+        const role = user.role;
+        let volunteerId;
+
+        // קביעת ה-ID של המתנדב לפי תפקיד
+        if (role === "volunteer") {
+          volunteerId = user.id;
+        } else if (role === "admin") {
+          const params = new URLSearchParams(window.location.search);
+          volunteerId = params.get("id");
+          if (!volunteerId) {
+            alert("❌ לא נמצא מזהה מתנדב ב-URL");
+            return;
+          }
+        } else {
+          alert("⚠️ אין לך הרשאות לצפות בפרופיל זה");
+          return;
+        }
+
+        // שליפת נתוני המתנדב מהשרת
+        const res = await fetch(`http://localhost:3000/api/volunteers/${volunteerId}`, {
+          credentials: "include"
+        });
+        if (!res.ok) throw new Error("שגיאה בקבלת פרטי מתנדב");
+
+        const volunteer = await res.json();
+
+        // 🛡️ חסימת גישה למתנדב זר לפי אימייל
+        if (role === "volunteer" && volunteer.email !== user.email) {
+          alert("❌ אין לך הרשאה לצפות בפרופיל זה");
+          window.location.href = "volunteer_list.html";
+          return;
+        }
+
+        // הצגת פרטי המתנדב
+        document.getElementById("fullName").textContent = volunteer.full_name || "";
+        document.getElementById("age").textContent = volunteer.age || "";
+        document.getElementById("email").textContent = volunteer.email || "";
+        document.getElementById("phone").textContent = volunteer.phone || "";
+        document.getElementById("area").textContent = volunteer.area || "";
+        document.getElementById("interests").textContent = volunteer.interests || "";
+        document.getElementById("assignedGroup").textContent =
+          volunteer.group?.age_category || "לא שובץ";
+
+        // תצוגה וכלים למנהל בלבד
+        if (role === "admin") {
+          document.getElementById("editBtn").href = `edit_volunteer.html?id=${volunteerId}`;
+          document.getElementById("editBtn").style.display = "inline-block";
+          document.getElementById("deleteBtn").style.display = "inline-block";
+
+          document.getElementById("deleteBtn").addEventListener("click", async () => {
+            if (!confirm("האם אתה בטוח שברצונך למחוק את המתנדב?")) return;
+            try {
+              const delRes = await fetch(`http://localhost:3000/api/volunteers/${volunteerId}`, {
+                method: "DELETE"
+              });
+              if (!delRes.ok) throw new Error("שגיאה במחיקה");
+              alert("🗑️ המתנדב נמחק בהצלחה");
+              window.location.href = "volunteer_list.html";
+            } catch (err) {
+              console.error("⚠️ שגיאה במחיקת מתנדב:", err);
+              alert("⚠️ שגיאה במחיקת מתנדב");
+            }
+          });
+
+          // שיבוץ לקבוצה
+          document.getElementById("groupAssignmentSection").style.display = "block";
+          const groupRes = await fetch("http://localhost:3000/api/groups");
+          const groups = await groupRes.json();
+          const select = document.getElementById("groupSelect");
+
+          groups.forEach(group => {
+            const option = document.createElement("option");
+            option.value = group._id;
+            option.textContent = group.age_category;
+            if (volunteer.group?._id === group._id) option.selected = true;
+            select.appendChild(option);
+          });
+
+          document.getElementById("assignGroupBtn").addEventListener("click", async () => {
+            const groupId = select.value;
+            if (!groupId) return alert("יש לבחור קבוצה");
+
+            try {
+              const assignRes = await fetch(`http://localhost:3000/api/groups/${groupId}/assign-volunteer`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ volunteer_id: volunteerId })
+              });
+
+              if (!assignRes.ok) throw new Error("שגיאה בשיבוץ");
+              alert("✅ המתנדב שובץ בהצלחה לקבוצה");
+              location.reload();
+            } catch (err) {
+              console.error("שגיאה בשיבוץ מתנדב:", err);
+              alert("⚠️ שגיאה בשיבוץ");
+            }
+          });
+        }
+      } catch (err) {
+        console.error("⚠ שגיאה כללית:", err);
+        alert("⚠️ שגיאה בטעינת הדף");
+      }
+    });
+  </script>
+
+</body>
+</html>

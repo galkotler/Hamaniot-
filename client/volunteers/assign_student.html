@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <title>שיבוץ מתנדב לילד</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+
+<body class="assign-volunteer-page">
+  <header>
+    <nav>
+      <ul>
+        <li><a href="../index.html">דף הבית</a></li>
+        <li><a href="../content/content_list.html">פורטל תוכן</a></li>
+        <li><a href="../children/profile_list.html">פרופיל ילדים</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>🌻 שיבוץ לקבוצה</h1>
+    <p id="volunteerInfo">טוען מידע על המתנדב...</p>
+
+    <form id="assignForm" class="assign-form" style="display:none;">
+      <label for="studentSelect">בחר ילד לשיבוץ:</label>
+      <select id="studentSelect" required>
+        <option value="">-- בחר ילד --</option>
+      </select>
+      <button type="submit">שבץ</button>
+    </form>
+
+    <a href="volunteer_list.html" class="assign-btn">⬅ חזרה לרשימת מתנדבים</a>
+  </main>
+
+  <footer>
+    © 2025 עמותת חמניות - כל הזכויות שמורות
+  </footer>
+
+  <script>
+    const role = localStorage.getItem("role");
+    if (role !== "admin") {
+      alert("גישה זו זמינה רק למנהל.");
+      window.location.href = "../index.html";
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const volunteerId = urlParams.get("id");
+    const volunteerInfo = document.getElementById("volunteerInfo");
+    const studentSelect = document.getElementById("studentSelect");
+    const assignForm = document.getElementById("assignForm");
+
+    if (!volunteerId) {
+      volunteerInfo.textContent = "❌ חסר מזהה מתנדב בכתובת הדף.";
+    } else {
+      loadVolunteerAndChildren(volunteerId);
+    }
+
+    async function loadVolunteerAndChildren(id) {
+      try {
+        const res = await fetch(`/api/volunteers/${id}`);
+        const volunteer = await res.json();
+
+        const groupLabel = volunteer.group?.age_category || "לא שובץ";
+        volunteerInfo.textContent = `שיבוץ עבור: ${volunteer.full_name} | קבוצת גיל: ${groupLabel}`;
+
+        const childrenRes = await fetch(`/api/children`);
+        const children = await childrenRes.json();
+
+        const filtered = children.filter(c =>
+          c.group?.age_category === volunteer.group?.age_category && !c.assigned_volunteer
+        );
+
+        if (filtered.length === 0) {
+          studentSelect.innerHTML = `<option>⚠️ אין ילדים זמינים לשיבוץ בקבוצה זו</option>`;
+        } else {
+          filtered.forEach(child => {
+            const option = document.createElement("option");
+            option.value = child._id;
+            option.textContent = `${child.first_name} ${child.last_name}`;
+            studentSelect.appendChild(option);
+          });
+          assignForm.style.display = "block";
+        }
+
+        assignForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const studentId = studentSelect.value;
+
+          try {
+            const assignRes = await fetch("/api/volunteers/assign", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                volunteer_id: volunteer._id,
+                child_id: studentId
+              })
+            });
+
+            if (!assignRes.ok) throw new Error("שגיאה בשיבוץ");
+            alert("✅ השיבוץ בוצע ונשלחו הודעות");
+            localStorage.setItem("refreshVolunteers", "true");
+            window.location.href = "volunteer_list.html";
+          } catch (err) {
+            alert("❌ שגיאה בביצוע השיבוץ");
+            console.error(err);
+          }
+        });
+
+      } catch (err) {
+        volunteerInfo.textContent = "❌ שגיאה בטעינת פרטי המתנדב";
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>

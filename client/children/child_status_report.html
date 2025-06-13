@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>דוח עדכון מצב ילד</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="../index.html">🏠 דף הבית</a></li>
+        <li><a href="profile_list.html">⬅ חזרה לרשימת פרופילים</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="report-container">
+    <h1>📝 דוח עדכון מצב לילד</h1>
+
+    <form id="statusReportForm">
+      <p><strong>דיווח מתנדב על מצב רגשי / תצפית יומית</strong></p>
+
+      <label for="reportDate">תאריך:</label>
+      <input type="date" id="reportDate" name="reportDate" required>
+
+      <label for="content">תיאור / הערות:</label>
+      <textarea id="content" name="content" rows="5" placeholder="רשום כאן את תצפיתך..."></textarea>
+
+      <button type="submit">שלח דוח</button>
+    </form>
+
+    <div id="responseMessage" style="text-align: center; margin-top: 20px; font-weight: bold;"></div>
+  </main>
+
+  <footer>
+    © 2025 עמותת חמניות - כל הזכויות שמורות
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const params = new URLSearchParams(window.location.search);
+      const childId = params.get("id");
+      const form = document.getElementById("statusReportForm");
+      const message = document.getElementById("responseMessage");
+
+      // הגדרת תאריך ברירת מחדל
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("reportDate").value = today;
+
+      // 🛡️ אימות משתמש
+      try {
+        const authRes = await fetch("/api/auth/check", { credentials: "include" });
+        if (!authRes.ok) throw new Error("לא מחובר");
+
+        const user = await authRes.json();
+
+        if (user.role !== "volunteer") {
+          alert("⛔ רק מתנדבים רשאים לשלוח דוח");
+          window.location.href = "../index.html";
+          return;
+        }
+      } catch (err) {
+        alert("⛔ אין גישה – התחבר מחדש");
+        window.location.href = "../login.html";
+        return;
+      }
+
+      // שליחה
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        if (!childId) {
+          alert("❌ לא נמצא מזהה ילד");
+          return;
+        }
+
+        const date = document.getElementById("reportDate").value;
+        const content = document.getElementById("content").value;
+
+        try {
+          const res = await fetch("/api/reports", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              type: "עדכון מצב",
+              child: childId,
+              content,
+              date
+            })
+          });
+
+          if (res.ok) {
+            message.style.color = "green";
+            message.textContent = "✅ הדוח נשלח בהצלחה!";
+            form.reset();
+            document.getElementById("reportDate").value = today;
+          } else {
+            const result = await res.json();
+            message.style.color = "red";
+            message.textContent = "❌ שגיאה: " + (result.message || "שליחת הדוח נכשלה");
+          }
+        } catch (err) {
+          console.error("❌ שגיאה:", err);
+          message.style.color = "red";
+          message.textContent = "❌ שגיאת רשת או שרת";
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

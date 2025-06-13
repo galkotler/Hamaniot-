@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>פרופילי ילדים</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin: 20px;
+    }
+    .child-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 16px;
+      width: 280px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .child-card h3 {
+      margin-top: 0;
+    }
+    .child-card p {
+      margin: 4px 0;
+    }
+    .card-actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .card-actions a,
+    .card-actions button {
+      padding: 6px 10px;
+      text-decoration: none;
+      border-radius: 6px;
+      color: #fff;
+      background-color: #4CAF50;
+      border: none;
+      cursor: pointer;
+    }
+    .card-actions .edit-btn { background-color: #f39c12; }
+    .card-actions .delete-btn { background-color: #e74c3c; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="../index.html">דף הבית</a></li>
+        <li><a href="../volunteers/volunteer_list.html" id="volunteers-link">מתנדבים</a></li>
+        <li><a href="../content/content_list.html">פורטל תוכן</a></li>
+        
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1 style="text-align: center;">רשימת פרופילים</h1>
+
+    <div class="search-bar" style="text-align: center;">
+      <input type="text" id="searchInput" placeholder="חפש לפי שם...">
+      <select id="groupFilter" style="display: none;">
+        <option value="">סינון לפי קבוצה</option>
+      </select>
+      <a href="add_child_form.html" class="add-button" id="addChildBtn" style="display: none;">➕ הוספת ילד</a>
+    </div>
+
+    <div class="card-container" id="childrenContainer">
+      <!-- כרטיסים ייטענו כאן דינמית -->
+    </div>
+  </main>
+
+  <footer>
+    <p style="text-align:center;">© 2025 עמותת חמניות - כל הזכויות שמורות</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const role = localStorage.getItem("role");
+      const group = localStorage.getItem("group");
+      const childrenContainer = document.getElementById("childrenContainer");
+      const addBtn = document.getElementById("addChildBtn");
+      const volunteersLink = document.getElementById("volunteers-link");
+
+      if (role !== "admin" && volunteersLink) volunteersLink.style.display = "none";
+      if (role === "admin") addBtn.style.display = "inline-block";
+
+      try {
+        const res = await fetch("http://localhost:3000/api/children", {
+          credentials: "include"
+        });
+        const children = await res.json();
+
+        let filtered = children;
+        if (role === "volunteer" && group) {
+          filtered = children.filter(c => c.group?._id === group);
+        }
+
+        filtered.forEach(child => {
+          const card = document.createElement("div");
+          card.className = "child-card";
+          card.innerHTML = `
+            <h3>${child.first_name} ${child.last_name}</h3>
+            <p><strong>תאריך לידה:</strong> ${new Date(child.birth_date).toLocaleDateString("he-IL")}</p>
+            <p><strong>קטגוריית גיל:</strong> ${child.group?.age_category || "לא שובץ"}</p>
+            <div class="card-actions">
+              <a href="profile.html?id=${child._id}" class="view-btn">צפה בפרופיל</a>
+            </div>
+          `;
+
+          if (role === "admin") {
+            const editBtn = document.createElement("a");
+            editBtn.textContent = "✏️ עריכה";
+            editBtn.href = `edit_child.html?id=${child._id}`;
+            editBtn.className = "edit-btn";
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "🗑️ מחיקה";
+            deleteBtn.className = "delete-btn";
+            deleteBtn.addEventListener("click", async () => {
+              if (!confirm("האם אתה בטוח שברצונך למחוק את הילד?")) return;
+              try {
+                const delRes = await fetch(`http://localhost:3000/api/children/${child._id}`, {
+                  method: "DELETE"
+                });
+                if (!delRes.ok) throw new Error();
+                alert("✅ הילד נמחק בהצלחה");
+                location.reload();
+              } catch {
+                alert("❌ שגיאה במחיקה");
+              }
+            });
+
+            card.querySelector(".card-actions").appendChild(editBtn);
+            card.querySelector(".card-actions").appendChild(deleteBtn);
+          }
+
+          childrenContainer.appendChild(card);
+        });
+      } catch (err) {
+        console.error("שגיאה בטעינת ילדים:", err);
+        childrenContainer.innerHTML = "<p>⚠️ שגיאה בטעינת ילדים</p>";
+      }
+    });
+  </script>
+</body>
+</html>

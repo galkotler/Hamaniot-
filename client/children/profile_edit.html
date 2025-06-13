@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>עריכת פרופיל ילד</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <!-- ניווט -->
+  <nav>
+    <ul>
+      <li><a href="../index.html">🏠 דף הבית</a></li>
+      <li><a href="profile_list.html">📋 רשימת פרופילים</a></li>
+      <li><a href="#" id="backToProfile">⬅ חזרה לפרופיל</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h1 style="text-align: center;">עריכת פרופיל ילד</h1>
+
+    <form id="editChildForm">
+      <input type="hidden" id="child_id" name="child_id">
+
+      <label for="first_name">שם פרטי:</label>
+      <input type="text" id="first_name" name="first_name" required>
+
+      <label for="last_name">שם משפחה:</label>
+      <input type="text" id="last_name" name="last_name" required>
+
+      <label for="birth_date">תאריך לידה:</label>
+      <input type="date" id="birth_date" name="birth_date" required>
+
+      <label for="address">כתובת מגורים:</label>
+      <input type="text" id="address" name="address">
+
+      <label for="guardian_name">שם אפוטרופוס:</label>
+      <input type="text" id="guardian_name" name="guardian_name" required>
+
+      <label for="guardian_phone">טלפון אפוטרופוס:</label>
+      <input type="tel" id="guardian_phone" name="guardian_phone" required>
+
+      <label for="personal_info">מידע תיק אישי:</label>
+      <textarea id="personal_info" name="personal_info" rows="4" placeholder="לדוג׳: רגישות לגלוטן, עבר טראומה, זקוק לתמיכה רגשית וכו׳"></textarea>
+
+      <button type="submit">עדכון שינויים</button>
+    </form>
+
+    <p id="responseMessage" style="text-align: center; color: green; margin-top: 20px;"></p>
+  </main>
+
+  <footer>
+    <p style="text-align: center;">© 2025 עמותת חמניות - כל הזכויות שמורות</p>
+  </footer>
+
+  <script>
+    // הגבלת גישה למנהלים בלבד
+    document.addEventListener("DOMContentLoaded", () => {
+      const role = localStorage.getItem("role");
+      const params = new URLSearchParams(window.location.search);
+      const childId = params.get("id");
+
+      if (role !== "admin") {
+        alert("הגישה מותרת למנהלים בלבד.");
+        window.location.href = "../index.html";
+        return;
+      }
+
+      if (childId) {
+        document.getElementById("backToProfile").href = `profile.html?id=${childId}`;
+      }
+    });
+  </script>
+
+  <script src="../js/edit_child.js"></script>
+</body>
+</html>

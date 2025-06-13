@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>פרופיל ילד</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/view_child_profile.js" defer></script>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="../index.html">🏠 דף הבית</a></li>
+        <li><a href="profile_list.html">⬅ חזרה לרשימת פרופילים</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="profile-container">
+    <h1>פרופיל ילד</h1>
+
+    <div class="profile-info">
+      <p><span class="label">שם מלא:</span> <span id="fullName"></span></p>
+      <p><span class="label">תאריך לידה:</span> <span id="birthDate"></span></p>
+      <p><span class="label">כתובת מגורים:</span> <span id="address"></span></p>
+      <p><span class="label">שם אפוטרופוס:</span> <span id="guardianName"></span></p>
+      <p><span class="label">טלפון אפוטרופוס:</span> <span id="guardianPhone"></span></p>
+      <p><span class="label">מידע תיק אישי:</span> <span id="personalInfo"></span></p>
+      <p><span class="label">קבוצת גיל:</span> <span id="group"></span></p>
+    </div>
+
+    <!-- רק למנהלים: שיבוץ קבוצה -->
+    <div id="groupAssignmentSection" style="display:none; margin-top: 20px; text-align: center;">
+      <label for="groupSelect">שיבוץ לקבוצה:</label>
+      <select id="groupSelect">
+        <option value="">-- בחר קבוצה --</option>
+      </select>
+      <button id="assignGroupBtn">שמור</button>
+    </div>
+
+    <!-- כפתורי פעולה -->
+    <div class="action-buttons" style="margin-top: 20px; text-align: center;">
+      <a id="editBtn" class="edit-button" href="#" style="display: none;">✏️ עריכת פרופיל</a>
+      <button id="deleteBtn" class="delete-button" style="display: none;">🗑️ מחיקת פרופיל</button>
+      <a id="statusReportBtn" class="report-button" href="#" style="display: none;">📝 מילוי דוח עדכון מצב</a>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 עמותת חמניות - כל הזכויות שמורות
+  </footer>
+</body>
+</html>

@@ -1,0 +1,723 @@
+
+/* בסיס */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Calibri', 'Gisha', sans-serif;
+  direction: rtl;
+  background-color: #f9f9f9;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #d1495b;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+  color: #444;
+}
+
+/* ניווט */
+header nav ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  background-color: #ffe066;
+  padding: 10px 0;
+  margin: 0;
+}
+
+header nav ul li {
+  margin: 0 15px;
+}
+
+header nav ul li a {
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+}
+
+nav {
+  background-color: #3f51b5;
+  padding: 12px 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #fafafa;
+}
+
+/* מבנה ראשי */
+main {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* טפסים */
+input[type='text'],
+input[type='number'],
+input[type='email'],
+input[type='tel'],
+input[type='file'],
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* טבלאות */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: right;
+}
+
+th {
+  background-color: #ffeb99;
+}
+
+/* כפתורים */
+button,
+.assign-btn,
+.upload-btn {
+  margin-top: 20px;
+  padding: 12px 28px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  text-align: center;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+button:hover,
+.upload-btn:hover,
+.assign-btn:hover {
+  background-color: #45a049;
+}
+
+/* כרטיסיות תוכן */
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.content-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: 260px;
+  padding: 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.content-card h3 {
+  margin-top: 0;
+  color: #3f51b5;
+}
+
+.content-card p {
+  margin: 5px 0;
+}
+
+.download-link {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #3f51b5;
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.download-link:hover {
+  background-color: #2c3e91;
+}
+
+/* פוטר */
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #ffe066;
+  margin-top: 40px;
+}
+
+/* דשבורד */
+.dashboard {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #fff8dc;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.dashboard h2 {
+  text-align: center;
+  color: #3f51b5;
+}
+.dashboard ul {
+  list-style: none;
+  padding: 0;
+  font-size: 16px;
+}
+.dashboard ul li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* כפתורי פעולה בדף הבית */
+.action-buttons {
+  margin-top: 30px;
+  text-align: center;
+}
+.action-buttons a {
+  display: inline-block;
+  margin: 10px;
+  padding: 12px 24px;
+  background-color: #3f51b5;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+.action-buttons a:hover {
+  background-color: #2c3e91;
+}
+/* גופן עמוד רישום ילד */
+body {
+  font-family: 'Calibri', 'Gisha', sans-serif;
+}
+body {
+  font-family: 'Calibri', 'Gisha', sans-serif;
+  direction: rtl;
+  padding: 0;
+  margin: 0;
+  background-color: #f0f2f5;
+    }
+nav {
+  background-color: #3f51b5;
+  padding: 12px 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  transition: color 0.3s;
+    }
+nav a:hover {
+  color: #fafafa;
+    }
+main {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+    }
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+  color: #444;
+    }
+input[type="text"], input[type="number"], textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+    }
+button {
+  margin-top: 25px;
+  padding: 12px 28px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+    }
+button:hover {
+  background-color: #45a049;
+    }
+/* עיצוב דף רשימת פרופילים */
+table.profile-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+table.profile-table th,
+table.profile-table td {
+  padding: 12px 24px;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+table.profile-table th {
+  background-color: #f0f0f0;
+}
+table.profile-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+input#searchInput {
+  padding: 8px;
+  width: 300px;
+  font-size: 16px;
+}
+
+.add-button {
+  padding: 10px 20px;
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.add-button:hover {
+  background-color: #2c3e91;
+}
+/* פרופיל ילד */
+body {
+  font-family: 'Calibri', 'Gisha', sans-serif;
+  background-color: #f5f7fa;
+  padding: 20px;
+}
+
+.profile-container {
+  background-color: #fff;
+  padding: 30px;
+  max-width: 700px;
+  margin: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.profile-container h1 {
+  text-align: center;
+  color: #333;
+}
+
+.profile-info {
+  margin-top: 20px;
+}
+
+.profile-info p {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.label {
+  font-weight: bold;
+  color: #555;
+}
+/* דוחות מעקב */
+body {
+  font-family: 'Calibri', 'Gisha', sans-serif;
+  direction: rtl;
+  background-color: #f0f0f5;
+  margin: 0;
+}
+
+header {
+  background-color: #34495e;
+  padding: 12px 24px;
+  text-align: center;
+}
+
+header a {
+  color: white;
+  text-decoration: none;
+  margin: 0 16px;
+  font-size: 18px;
+}
+
+header a:hover {
+  color: #ffd700;
+}
+
+.report-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 1000px;
+  margin: 30px auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.report-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-container th,
+.report-container td {
+  text-align: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.report-container th {
+  background-color: #e0e0e0;
+}
+
+.support-suggestion {
+  font-weight: bold;
+  color: #4a4a4a;
+}
+/* סינון בפורטל תוכן */
+input,
+select {
+  margin: 6px;
+  padding: 5px;
+}
+/* דף העלאת תוכן */
+body.upload-page {
+  font-family: 'Calibri', 'Gisha', sans-serif;
+  direction: rtl;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.upload-form {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.upload-form label,
+.upload-form input,
+.upload-form select,
+.upload-form textarea,
+.upload-form button {
+  display: block;
+  width: 100%;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.upload-form button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.upload-form button:hover {
+  background-color: #45a049;
+}
+
+.upload-form .message {
+  text-align: center;
+  margin-top: 20px;
+  font-weight: bold;
+}
+/* עיצוב שדות סינון ברשימת תכנים */
+.content-filter input,
+.content-filter select {
+  margin: 6px;
+  padding: 5px;
+}
+.content-filter {
+  text-align: center;
+  margin-bottom: 20px;
+}
+/* עיצוב טופס רישום מתנדב */
+body.volunteer-registration {
+  font-family: 'Calibri', 'Gisha', sans-serif;
+  direction: rtl;
+  padding: 30px;
+  background-color: #f4f6f8;
+}
+
+form.volunteer-form {
+  max-width: 500px;
+  margin: auto;
+  background-color: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.volunteer-form h1 {
+  text-align: center;
+  color: #3f51b5;
+}
+
+.volunteer-form label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.volunteer-form input,
+.volunteer-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.volunteer-form button {
+  margin-top: 20px;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.volunteer-form button:hover {
+  background-color: #45a049;
+}
+
+.success {
+  text-align: center;
+  color: green;
+  font-weight: bold;
+  margin-top: 20px;
+}
+/* 🌻 עיצוב לדף שיבוץ מתנדב לתלמיד */
+.assign-volunteer-page {
+  font-family: 'Calibri', 'Gisha', sans-serif;
+  direction: rtl;
+  background-color: #f5f5f5;
+  padding: 30px;
+}
+
+.assign-volunteer-page h1 {
+  text-align: center;
+  color: #3f51b5;
+  margin-bottom: 20px;
+}
+
+#volunteerName {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.assign-form {
+  max-width: 400px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.assign-form label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.assign-form select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.assign-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.assign-form button:hover {
+  background-color: #45a049;
+}
+
+a.assign-btn {
+  display: block;
+  width: fit-content;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #3f51b5;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+a.assign-btn:hover {
+  background-color: #2c3e91;
+}
+.edit-button, .assign-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #3f51b5;
+  color: white;
+  border-radius: 8px;
+  margin: 5px;
+  text-decoration: none;
+}
+.edit-button:hover, .assign-button:hover {
+  background-color: #303f9f;
+}
+.child-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 16px;
+  width: 270px;
+  direction: rtl;
+  text-align: right;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+  transition: transform 0.2s ease;
+}
+
+.child-card:hover {
+  transform: scale(1.02);
+}
+
+.child-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+}
+
+.child-card p {
+  margin: 4px 0;
+  font-size: 16px;
+}
+
+.card-actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.card-actions a,
+.card-actions button {
+  padding: 6px 14px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  flex: 1 1 auto;
+  margin: 4px;
+  text-align: center;
+}
+
+.card-actions .view-btn {
+  background-color: #27ae60;
+}
+
+.card-actions .edit-btn {
+  background-color: #f39c12;
+}
+
+.card-actions .delete-btn {
+  background-color: #e74c3c;
+}

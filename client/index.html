@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>דף הבית - עמותת חמניות</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="children/profile_list.html">👦 פרופילי ילדים</a></li>
+        <li><a id="volunteers-link" href="volunteers/volunteer_list.html">🤝 מתנדבים</a></li>
+        <li><a href="content/content_list.html">📚 פורטל תוכן</a></li>
+        <li><a href="children/tracking_and_reports.html">📊 דו"חות וסטטיסטיקה</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1 id="welcome-message">מערכת ניהול - עמותת חמניות</h1>
+    <p style="text-align: center; font-size: 18px;">מערכת פנימית לניהול פעילות העמותה.</p>
+
+    <!-- תצוגת מנהלת -->
+    <div id="admin-section" style="display: none;">
+      <div class="dashboard">
+        <h2>מידע עדכני (מנהלת)</h2>
+        <ul>
+          <li>📌 ילדים רשומים: <strong id="children-count">טוען...</strong></li>
+          <li>🤝 מתנדבים פעילים: <strong id="volunteers-count">טוען...</strong></li>
+          <li>📁 קבצים שהועלו השבוע: <strong id="uploads-count">טוען...</strong></li>
+        </ul>
+      </div>
+      <div class="action-buttons">
+        <a href="children/add_child_form.html">➕ הוספת ילד</a>
+        <a href="volunteers/add_volunteer.html">🤝 הוספת מתנדב</a>
+        <a href="content/upload_content.html">📄 הוספת תוכן</a>
+      </div>
+    </div>
+
+    <!-- תצוגת מתנדב -->
+    <div id="volunteer-section" style="display: none;">
+      <div class="dashboard">
+        <h2>מידע עדכני (מתנדב)</h2>
+        <ul>
+          <li>👦 ילדים משובצים אליי: <strong id="assigned-children-count">טוען...</strong></li>
+          <li>📚 תכנים להעברה השבוע: <strong id="weekly-content-count">טוען...</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+      <button onclick="logout()" class="btn">🚪 התנתק</button>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 עמותת חמניות - כל הזכויות שמורות
+  </footer>
+
+  <script>
+    async function checkLogin() {
+      try {
+        const res = await fetch("http://localhost:3000/api/auth/check", {
+          credentials: "include"
+        });
+
+        if (!res.ok) {
+          console.warn("🔒 לא מחובר - סטטוס:", res.status);
+          const error = await res.json();
+          console.warn("🧾 הודעת שגיאה מהשרת:", error.message);
+          window.location.href = "login.html";
+          return null;
+        }
+
+        const user = await res.json();
+        console.log("✅ מחובר כ:", user);
+        return user;
+      } catch (err) {
+        console.error("❌ שגיאה בבדיקת התחברות:", err);
+        window.location.href = "login.html";
+        return null;
+      }
+    }
+
+    async function logout() {
+      await fetch("http://localhost:3000/api/auth/logout", {
+        method: "POST",
+        credentials: "include"
+      });
+      window.location.href = "login.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      console.log("📄 טוען דף הבית, בודק התחברות...");
+      const user = await checkLogin();
+      if (!user) return;
+
+      const { name, role, group } = user;
+      document.getElementById("welcome-message").textContent = `שלום ${name} 👋`;
+
+      localStorage.setItem("role", role);
+      if (role === "volunteer" && group?._id) {
+        localStorage.setItem("group", group._id);
+      }
+
+      if (role === "admin") {
+        document.getElementById("admin-section").style.display = "block";
+        console.log("🛠 מציג תפריט מנהלת");
+
+        try {
+          const res = await fetch("http://localhost:3000/api/stats", {
+            credentials: "include"
+          });
+          const data = await res.json();
+          document.getElementById("children-count").textContent = data.children || 0;
+          document.getElementById("volunteers-count").textContent = data.volunteers || 0;
+          document.getElementById("uploads-count").textContent = data.uploads || 0;
+          document.getElementById("messages-count").textContent = data.messages || 0;
+        } catch (err) {
+          console.error("שגיאה בטעינת נתוני מנהלת:", err);
+        }
+      }
+
+      if (role === "volunteer") {
+        document.getElementById("volunteer-section").style.display = "block";
+        console.log("🛠 מציג תפריט מתנדב");
+
+        const link = document.getElementById("volunteers-link");
+        if (link) link.style.display = "none"; // הסתרת הקישור
+
+        try {
+          const res = await fetch("http://localhost:3000/api/volunteers/volunteer-dashboard", {
+            credentials: "include"
+          });
+          const data = await res.json();
+          document.getElementById("assigned-children-count").textContent = data.assignedChildren || 0;
+          document.getElementById("weekly-content-count").textContent = data.weeklyContent || 0;
+        } catch (err) {
+          console.error("שגיאה בטעינת נתוני מתנדב:", err);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

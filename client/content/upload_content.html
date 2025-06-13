@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>העלאת תוכן</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html">דף הבית</a>
+    <a href="content_list.html">רשימת תכנים</a>
+  </nav>
+
+  <main>
+    <h1 style="text-align:center;">העלאת תוכן לפורטל</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <label for="title">כותרת הקובץ:</label>
+      <input type="text" id="title" name="title" required>
+
+      <label for="description">תיאור:</label>
+      <textarea id="description" name="description" rows="3"></textarea>
+
+      <label for="category">קטגוריה:</label>
+      <select id="category" name="category" required>
+        <option value="רגשי">רגשי</option>
+        <option value="חינוכי">חינוכי</option>
+        <option value="חברתי">חברתי</option>
+      </select>
+
+      <label for="audience">קהל יעד:</label>
+      <select id="audience" name="audience" required>
+        <option value="גיל הרך">גיל הרך</option>
+        <option value="ילדים">ילדים</option>
+        <option value="נוער">נוער</option>
+      </select>
+
+      <label for="file">בחר קובץ:</label>
+      <input type="file" id="file" name="file" required>
+
+      <button type="submit">העלה קובץ</button>
+    </form>
+
+    <div class="message" id="uploadMessage"></div>
+  </main>
+
+  <footer style="text-align:center; padding:20px;">
+    © 2025 עמותת חמניות - כל הזכויות שמורות
+  </footer>
+
+  <script>
+    document.getElementById("uploadForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+
+      try {
+        const res = await fetch("http://localhost:3000/api/contents", {
+          method: "POST",
+          body: formData
+        });
+
+        const result = await res.json();
+        const messageDiv = document.getElementById("uploadMessage");
+
+        if (res.ok) {
+          messageDiv.style.color = "green";
+          messageDiv.textContent = "✅ הקובץ הועלה בהצלחה!";
+          this.reset();
+        } else {
+          messageDiv.style.color = "red";
+          messageDiv.textContent = "❌ שגיאה: " + (result.message || "לא הצלחנו להעלות את הקובץ");
+        }
+      } catch (err) {
+        document.getElementById("uploadMessage").textContent = "❌ שגיאה בעת העלאה לשרת";
+        document.getElementById("uploadMessage").style.color = "red";
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
