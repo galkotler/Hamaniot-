@@ -23,39 +23,8 @@
     <div id="error-message" class="error-message" style="display: none;"></div>
   </div>
 
-  <script>
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-
-      try {
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          credentials: 'include', // <-  הקונפיגורציה להיכלל הקוקיז
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email, password })
-        });
-
-        if (response.ok) {
-          // התחברות מוצלחת
-          window.location.href = '/';
-        } else {
-          // שגיאה
-          const error = await response.json();
-          document.getElementById('error-message').innerText = error.message;
-          document.getElementById('error-message').style.display = 'block';
-        }
-      } catch (err) {
-        console.error(err);
-        document.getElementById('error-message').innerText = "שגיאה באופן התחברות.";
-        document.getElementById('error-message').style.display = 'block';
-      }
-    });
-  </script>
+  <!-- ✅ נכלול את קובץ ה-JS החיצוני במקום הסקריפט הפנימי -->
+  <script src="js/auth.js"></script>
 
 </body>
 </html>
