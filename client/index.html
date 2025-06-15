@@ -62,7 +62,7 @@
     const BASE_URL = "https://hamaniot-3.onrender.com";
     async function checkLogin() {
       try {
-        const res = await fetch("${BASE_URL}/api/auth/check", {
+        const res = await fetch('${BASE_URL}/api/auth/check', {
           credentials: "include"
         });
 
@@ -85,7 +85,7 @@
     }
 
     async function logout() {
-      await fetch("${BASE_URL}/api/auth/logout", {
+      await fetch('${BASE_URL}/api/auth/logout', {
         method: "POST",
         credentials: "include"
       });
@@ -110,7 +110,7 @@
         console.log("🛠 מציג תפריט מנהלת");
 
         try {
-          const res = await fetch("${BASE_URL}/api/stats", {
+          const res = await fetch('${BASE_URL}/api/stats', {
             credentials: "include"
           });
           const data = await res.json();
@@ -131,7 +131,7 @@
         if (link) link.style.display = "none"; // הסתרת הקישור
 
         try {
-          const res = await fetch("${BASE_URL}/api/volunteers/volunteer-dashboard", {
+          const res = await fetch('${BASE_URL}/api/volunteers/volunteer-dashboard', {
             credentials: "include"
           });
           const data = await res.json();
