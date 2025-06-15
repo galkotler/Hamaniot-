@@ -60,9 +60,10 @@
 
   <script>
     const BASE_URL = "https://hamaniot-3.onrender.com";
+
     async function checkLogin() {
       try {
-        const res = await fetch('${BASE_URL}/api/auth/check', {
+        const res = await fetch(`${BASE_URL}/api/auth/check`, { 
           credentials: "include"
         });
 
@@ -70,7 +71,7 @@
           console.warn("🔒 לא מחובר - סטטוס:", res.status);
           const error = await res.json();
           console.warn("🧾 הודעת שגיאה מהשרת:", error.message);
-          window.location.href = "login.html";
+          window.location.replace("/login.html"); // ✅ שינוי כאן
           return null;
         }
 
@@ -79,17 +80,17 @@
         return user;
       } catch (err) {
         console.error("❌ שגיאה בבדיקת התחברות:", err);
-        window.location.href = "login.html";
+        window.location.replace("/login.html"); // ✅ שינוי כאן
         return null;
       }
     }
 
     async function logout() {
-      await fetch('${BASE_URL}/api/auth/logout', {
+      await fetch(`${BASE_URL}/api/auth/logout`, { 
         method: "POST",
         credentials: "include"
       });
-      window.location.href = "login.html";
+      window.location.replace("/login.html"); // ✅ שינוי כאן
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
@@ -110,7 +111,7 @@
         console.log("🛠 מציג תפריט מנהלת");
 
         try {
-          const res = await fetch('${BASE_URL}/api/stats', {
+          const res = await fetch(`${BASE_URL}/api/stats`, { 
             credentials: "include"
           });
           const data = await res.json();
@@ -131,7 +132,7 @@
         if (link) link.style.display = "none"; // הסתרת הקישור
 
         try {
-          const res = await fetch('${BASE_URL}/api/volunteers/volunteer-dashboard', {
+          const res = await fetch(`${BASE_URL}/api/volunteers/volunteer-dashboard`, { 
             credentials: "include"
           });
           const data = await res.json();
