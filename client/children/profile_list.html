@@ -86,12 +86,13 @@
       const childrenContainer = document.getElementById("childrenContainer");
       const addBtn = document.getElementById("addChildBtn");
       const volunteersLink = document.getElementById("volunteers-link");
+      const BASE_URL = "https://hamaniot-3.onrender.com";
 
       if (role !== "admin" && volunteersLink) volunteersLink.style.display = "none";
       if (role === "admin") addBtn.style.display = "inline-block";
 
       try {
-        const res = await fetch("http://localhost:3000/api/children", {
+        const res = await fetch('${BASE_URL}/api/children', {
           credentials: "include"
         });
         const children = await res.json();
@@ -125,7 +126,7 @@
             deleteBtn.addEventListener("click", async () => {
               if (!confirm("האם אתה בטוח שברצונך למחוק את הילד?")) return;
               try {
-                const delRes = await fetch(`http://localhost:3000/api/children/${child._id}`, {
+                const delRes = await fetch(`${BASE_URL}/api/children/${child._id}`, {
                   method: "DELETE"
                 });
                 if (!delRes.ok) throw new Error();

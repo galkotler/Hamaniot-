@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const BASE_URL = "https://hamaniot-3.onrender.com";
   const form = document.getElementById("login-form");
 
   form.addEventListener("submit", async (e) => {
@@ -8,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = document.getElementById("password").value;
 
     try {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
+      const res = await fetch(`${BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include", // חובה! אחרת session לא נשמר
@@ -30,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       console.log("✅ התחברות הצליחה:", data);
 
-      // ✅ מעבר לדף הבית (ודא שהוא נמצא בשורש!)
+      // ✅ מעבר לדף הבית
       window.location.href = "/index.html";
 
     } catch (err) {

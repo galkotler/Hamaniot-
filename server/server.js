@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 
 // ✅ CORS – מאפשר העברת cookies בין פורטים
 app.use(cors({
-  origin: 'http://localhost:3000', // שים את הפורט של ה-Frontend שלך
+  origin: 'https://hamaniot-3.onrender.com', // שים את הפורט של ה-Frontend שלך
   credentials: true
 }));
 
@@ -24,10 +24,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // שים true אם אתה על HTTPS
+    secure: true, 
     httpOnly: true,
-    sameSite: 'lax', // 'none' אם אתה על דומיינים נפרדים עם HTTPS
-    maxAge: 1000 * 60 * 60 // שעה
+    sameSite: 'lax', 
+    maxAge: 1000 * 60 * 60 
   }
 }));
 
@@ -67,5 +67,5 @@ app.use('/api', (req, res) => {
 
 // ✅ הפעלת השרת
 app.listen(PORT, () => {
-  console.log(`🚀 Server is listening at http://localhost:${PORT}`);
+  console.log(console.log(`🚀 Server is listening. Access it via Render URL in production.`));
 });

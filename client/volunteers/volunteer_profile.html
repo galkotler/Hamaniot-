@@ -77,9 +77,10 @@
   </footer>
 
   <script>
+    const BASE_URL = "https://hamaniot-3.onrender.com";
     document.addEventListener("DOMContentLoaded", async () => {
       try {
-        const checkRes = await fetch("http://localhost:3000/api/auth/check", {
+        const checkRes = await fetch("${BASE_URL}/api/auth/check", {
           credentials: "include"
         });
 
@@ -109,7 +110,7 @@
         }
 
         // שליפת נתוני המתנדב מהשרת
-        const res = await fetch(`http://localhost:3000/api/volunteers/${volunteerId}`, {
+        const res = await fetch(`${BASE_URL}/api/volunteers/${volunteerId}`, {
           credentials: "include"
         });
         if (!res.ok) throw new Error("שגיאה בקבלת פרטי מתנדב");
@@ -142,7 +143,7 @@
           document.getElementById("deleteBtn").addEventListener("click", async () => {
             if (!confirm("האם אתה בטוח שברצונך למחוק את המתנדב?")) return;
             try {
-              const delRes = await fetch(`http://localhost:3000/api/volunteers/${volunteerId}`, {
+              const delRes = await fetch(`${BASE_URL}/api/volunteers/${volunteerId}`, {
                 method: "DELETE"
               });
               if (!delRes.ok) throw new Error("שגיאה במחיקה");
@@ -156,7 +157,7 @@
 
           // שיבוץ לקבוצה
           document.getElementById("groupAssignmentSection").style.display = "block";
-          const groupRes = await fetch("http://localhost:3000/api/groups");
+          const groupRes = await fetch("${BASE_URL}/api/groups");
           const groups = await groupRes.json();
           const select = document.getElementById("groupSelect");
 
@@ -173,7 +174,7 @@
             if (!groupId) return alert("יש לבחור קבוצה");
 
             try {
-              const assignRes = await fetch(`http://localhost:3000/api/groups/${groupId}/assign-volunteer`, {
+              const assignRes = await fetch(`${BASE_URL}/api/groups/${groupId}/assign-volunteer`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ volunteer_id: volunteerId })

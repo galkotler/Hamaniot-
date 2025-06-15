@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
+  const BASE_URL = "https://hamaniot-3.onrender.com"; // שנה לפי כתובת השרת שלך ברנדר
   const params = new URLSearchParams(window.location.search);
   const volunteerId = params.get("id");
 
@@ -11,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const messageBox = document.getElementById("responseMessage");
 
   try {
-    const res = await fetch(`http://localhost:3000/api/volunteers/${volunteerId}`);
+    const res = await fetch(`${BASE_URL}/api/volunteers/${volunteerId}`);
     if (!res.ok) throw new Error("שגיאה בטעינת נתונים מהשרת");
 
     const volunteer = await res.json();
@@ -42,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     try {
-      const res = await fetch(`http://localhost:3000/api/volunteers/${volunteerId}`, {
+      const res = await fetch(`${BASE_URL}/api/volunteers/${volunteerId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"

@@ -1,16 +1,17 @@
 document.addEventListener("DOMContentLoaded", async () => {
+  const BASE_URL = "https://hamaniot-3.onrender.com"; // ← כתובת השרת שלך ב-Render
   const params = new URLSearchParams(window.location.search);
   const childId = params.get("id");
   const form = document.getElementById("statusReportForm");
   const message = document.getElementById("responseMessage");
 
-  // הגדרת תאריך ברירת מחדל להיום
+  // תאריך ברירת מחדל להיום
   const today = new Date().toISOString().split("T")[0];
   document.getElementById("reportDate").value = today;
 
   // 🛡️ בדיקת התחברות
   try {
-    const authRes = await fetch("/api/auth/check", { credentials: "include" });
+    const authRes = await fetch(`${BASE_URL}/api/auth/check`, { credentials: "include" });
     if (!authRes.ok) throw new Error("לא מחובר");
     const user = await authRes.json();
 
@@ -40,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const content = document.getElementById("content").value;
 
     try {
-      const res = await fetch("/api/reports", {
+      const res = await fetch(`${BASE_URL}/api/reports`, {
         method: "POST",
         credentials: "include",
         headers: {

@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("registerForm");
+  const BASE_URL = "https://hamaniot-3.onrender.com";
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -7,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch("http://localhost:3000/api/volunteers", {
+      const response = await fetch("${BASE_URL}/api/volunteers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
+  const BASE_URL = "https://hamaniot-3.onrender.com";
   const urlParams = new URLSearchParams(window.location.search);
   const volunteerId = urlParams.get("id");
 
@@ -19,18 +20,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   const studentSelect = document.getElementById("studentSelect");
 
   try {
-    // שליפת מתנדב מהשרת
-    const volunteerRes = await fetch(`http://localhost:3000/api/volunteers/${volunteerId}`);
+    // ✅ שליפת מתנדב
+    const volunteerRes = await fetch(`${BASE_URL}/api/volunteers/${volunteerId}`, {
+      credentials: "include"
+    });
     const volunteer = await volunteerRes.json();
 
     const groupLabel = volunteer.group?.age_category || "לא שובץ";
     volunteerNameElem.textContent = `שיבוץ עבור: ${volunteer.full_name} | קבוצת גיל: ${groupLabel}`;
 
-    // שליפת כל הילדים
-    const childrenRes = await fetch("http://localhost:3000/api/children");
+    // ✅ שליפת ילדים
+    const childrenRes = await fetch(`${BASE_URL}/api/children`, {
+      credentials: "include"
+    });
     const children = await childrenRes.json();
 
-    // סינון לפי קבוצת גיל ואי שיבוץ
     const filtered = children.filter(c =>
       c.group?.age_category === volunteer.group?.age_category && !c.assigned_volunteer
     );
@@ -56,15 +60,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     studentSelect.innerHTML = `<option>⚠ שגיאה בטעינת נתונים</option>`;
   }
 
-  // שליחת שיבוץ
+  // ✅ שליחת שיבוץ
   document.getElementById("assignForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const studentId = studentSelect.value;
 
     try {
-      const res = await fetch("http://localhost:3000/api/volunteers/assign", {
+      const res = await fetch(`${BASE_URL}/api/volunteers/assign`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           volunteer_id: volunteerId,
           child_id: studentId

@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", async () => {
+  const BASE_URL = "https://hamaniot-3.onrender.com"; // 👈 החלף לכתובת של הפרויקט שלך ב-Render
   const container = document.getElementById("cardsContainer");
   const role = localStorage.getItem("role") || "volunteer";
 
   try {
-    const response = await fetch("http://localhost:3000/api/contents");
+    const response = await fetch(`${BASE_URL}/api/contents`);
     const contents = await response.json();
 
     contents.forEach(content => {
@@ -12,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       card.setAttribute("data-category", content.category);
       card.setAttribute("data-audience", content.audience);
 
-      const fileUrl = `/uploads/${content.filename}`;
+      const fileUrl = `${BASE_URL}/uploads/${content.filename}`;
 
       card.innerHTML = `
         <h3>${content.title}</h3>
@@ -24,7 +25,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         <div class="admin-controls"></div>
       `;
 
-      // כפתור מחיקה - רק למנהל
       if (role === "admin") {
         const controls = card.querySelector(".admin-controls");
 
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (!confirmDelete) return;
 
           try {
-            const res = await fetch(`http://localhost:3000/api/contents/${content._id}`, {
+            const res = await fetch(`${BASE_URL}/api/contents/${content._id}`, {
               method: "DELETE"
             });
 

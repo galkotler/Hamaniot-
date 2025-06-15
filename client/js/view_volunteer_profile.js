@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const volunteerId = params.get("id");
+  const BASE_URL = "https://hamaniot-3.onrender.com";
 
   if (!volunteerId) {
     alert("❌ לא נמצא מזהה מתנדב בכתובת הדף.");
@@ -8,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const res = await fetch(`http://localhost:3000/api/volunteers/${volunteerId}`);
+    const res = await fetch(`${BASE_URL}/api/volunteers/${volunteerId}`);
     if (!res.ok) throw new Error("שגיאה בקבלת נתוני מתנדב מהשרת");
 
     const volunteer = await res.json();

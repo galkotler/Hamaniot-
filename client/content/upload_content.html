@@ -53,9 +53,10 @@
       e.preventDefault();
 
       const formData = new FormData(this);
+      const BASE_URL = "https://hamaniot-3.onrender.com";
 
       try {
-        const res = await fetch("http://localhost:3000/api/contents", {
+        const res = await fetch("${BASE_URL}/api/contents", {
           method: "POST",
           body: formData
         });

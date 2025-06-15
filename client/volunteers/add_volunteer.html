@@ -88,6 +88,7 @@
         e.preventDefault();
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
+        const BASE_URL = "https://hamaniot-3.onrender.com";
 
         // בדיקה מקדימה
         if (!data.group) {
@@ -96,7 +97,7 @@
         }
 
         try {
-          const res = await fetch("http://localhost:3000/api/volunteers", {
+          const res = await fetch("${BASE_URL}/api/volunteers", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)

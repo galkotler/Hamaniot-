@@ -1,6 +1,7 @@
 document.getElementById("childForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
+  const BASE_URL = "https://hamaniot-3.onrender.com";
   // תאריך לידה וחישוב גיל
   const birthDateStr = document.querySelector('[name="birth_date"]').value;
   const birthDate = new Date(birthDateStr);
@@ -47,7 +48,7 @@ document.getElementById("childForm").addEventListener("submit", async function (
   };
 
   try {
-    const response = await fetch("http://localhost:3000/api/children", {
+    const response = await fetch("${BASE_URL}/api/children", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

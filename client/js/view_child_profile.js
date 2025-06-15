@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const childId = params.get("id");
+  const BASE_URL = "https://hamaniot-3.onrender.com";
+
 
   if (!childId) {
     alert("❌ לא נמצא מזהה בפרמטרים של ה-URL");
@@ -22,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const userGroup = user.group?.age_category;
 
     // שליפת פרטי ילד
-    const res = await fetch(`http://localhost:3000/api/children/${childId}`);
+    const res = await fetch(`${BASE_URL}/api/children/${childId}`);
     if (!res.ok) throw new Error("שגיאה בטעינת פרטי הילד");
 
     const child = await res.json();

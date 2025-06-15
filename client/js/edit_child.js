@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const BASE_URL = "https://hamaniot-3.onrender.com"; // שנה לכתובת שלך ברנדר
   const params = new URLSearchParams(window.location.search);
   const childId = params.get("id");
 
   // טוען נתוני הילד
-  fetch(`http://localhost:3000/api/children/${childId}`)
+  fetch(`${BASE_URL}/api/children/${childId}`)
     .then(res => res.json())
     .then(child => {
       document.getElementById("child_id").value = child._id;
@@ -45,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/api/children/${childId}`, {
+      const response = await fetch(`${BASE_URL}/api/children/${childId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"

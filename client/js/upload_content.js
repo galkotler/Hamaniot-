@@ -5,7 +5,7 @@ document.getElementById("uploadForm").addEventListener("submit", async function 
   const formData = new FormData(form);
 
   try {
-    const response = await fetch("http://localhost:3000/api/content", {
+    const response = await fetch("https://hamaniot-3.onrender.com/api/content", {
       method: "POST",
       body: formData
     });

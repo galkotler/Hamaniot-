@@ -59,6 +59,7 @@
       const volunteerId = params.get("id");
       const form = document.getElementById("editVolunteerForm");
       const responseMessage = document.getElementById("responseMessage");
+      const BASE_URL = "https://hamaniot-3.onrender.com";
 
       if (!volunteerId) {
         alert("❌ מזהה מתנדב חסר בכתובת.");
@@ -66,9 +67,11 @@
       }
 
       // טען קבוצות לתוך <select>
+
       async function loadGroups(selectedGroupId = "") {
+
         try {
-          const res = await fetch("http://localhost:3000/api/groups");
+          const res = await fetch("${BASE_URL}/api/groups");
           const groups = await res.json();
           const select = document.getElementById("group");
           select.innerHTML = `<option value="">-- בחר קבוצה --</option>`;
@@ -91,7 +94,7 @@
 
       // טען את פרטי המתנדב
       try {
-        const res = await fetch(`http://localhost:3000/api/volunteers/${volunteerId}`);
+        const res = await fetch(`${BASE_URL}/api/volunteers/${volunteerId}`);
         const volunteer = await res.json();
 
         document.getElementById("volunteer_id").value = volunteer._id;
@@ -116,7 +119,7 @@
         const data = Object.fromEntries(formData.entries());
 
         try {
-          const res = await fetch(`http://localhost:3000/api/volunteers/${volunteerId}`, {
+          const res = await fetch(`${BASE_URL}/api/volunteers/${volunteerId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)

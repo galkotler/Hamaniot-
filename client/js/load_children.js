@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const ageCategoryFromStorage = localStorage.getItem("group"); // נשמר ב-localStorage עבור מתנדבים
   const groupSelect = document.getElementById("groupFilter");
   const searchInput = document.getElementById("searchInput");
+  const BASE_URL = "https://hamaniot-3.onrender.com";
 
   let currentCategory = ageCategoryFromStorage || "";
 
@@ -35,7 +36,7 @@ async function loadChildren(role, category, searchTerm = "") {
   container.innerHTML = "";
 
   try {
-    const res = await fetch(`http://localhost:3000/api/children`, {
+    const res = await fetch(`${BASE_URL}/api/children`, {
       credentials: "include"
     });
 
@@ -103,7 +104,7 @@ async function deleteChild(id) {
   if (!confirm("האם אתה בטוח שברצונך למחוק את הפרופיל?")) return;
 
   try {
-    const res = await fetch(`http://localhost:3000/api/children/${id}`, {
+    const res = await fetch(`${BASE_URL}/api/children/${id}`, {
       method: "DELETE"
     });
 
