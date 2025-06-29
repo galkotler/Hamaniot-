@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const BASE_URL = "https://hamaniot-3.onrender.com";
 
   try {
-    const response = await fetch("${BASE_URL}/api/children");
+    const response = await fetch(`${BASE_URL}/api/children`);
     if (!response.ok) throw new Error("שגיאה בטעינת הילדים");
 
     const children = await response.json();
