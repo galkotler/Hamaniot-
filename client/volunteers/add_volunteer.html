@@ -57,10 +57,11 @@
 
       const form = document.getElementById("volunteerForm");
       const successMessage = document.getElementById("successMessage");
-
+      const BASE_URL = "https://hamaniot-3.onrender.com";
+      
       async function loadGroups() {
         try {
-          const res = await fetch("http://localhost:3000/api/groups");
+          const res = await fetch(`${BASE_URL}/api/groups`);
           const groups = await res.json();
           const groupSelect = document.getElementById("group");
 
@@ -97,7 +98,7 @@
         }
 
         try {
-          const res = await fetch("${BASE_URL}/api/volunteers", {
+          const res = await fetch(`${BASE_URL}/api/volunteers`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
