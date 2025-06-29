@@ -92,7 +92,7 @@
       if (role === "admin") addBtn.style.display = "inline-block";
 
       try {
-        const res = await fetch('${BASE_URL}/api/children', {
+        const res = await fetch(`${BASE_URL}/api/children`, {
           credentials: "include"
         });
         const children = await res.json();
