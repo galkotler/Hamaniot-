@@ -107,6 +107,19 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  try {
+    const child = await Child.findByIdAndDelete(req.params.id);
+    if (!child) {
+      return res.status(404).json({ message: "הילד לא נמצא" });
+    }
+    res.status(200).json({ message: "הילד נמחק בהצלחה" });
+  } catch (err) {
+    console.error("❌ שגיאה במחיקת ילד:", err);
+    res.status(500).json({ message: "שגיאה בשרת בעת מחיקת הילד" });
+  }
+});
+
 // ✅ יצירת ילד חדש עם המרה תקינה של group לפי age_category
 router.post("/", async (req, res) => {
   try {
