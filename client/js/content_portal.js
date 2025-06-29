@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const BASE_URL = "https://hamaniot-3.onrender.com"; // 👈 החלף לכתובת של הפרויקט שלך ב-Render
+  const BASE_URL = "https://hamaniot-3.onrender.com"; 
   const container = document.getElementById("cardsContainer");
   const role = localStorage.getItem("role") || "volunteer";
 
