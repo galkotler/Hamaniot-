@@ -71,7 +71,7 @@
       async function loadGroups(selectedGroupId = "") {
 
         try {
-          const res = await fetch("${BASE_URL}/api/groups");
+          const res = await fetch(`${BASE_URL}/api/groups`);
           const groups = await res.json();
           const select = document.getElementById("group");
           select.innerHTML = `<option value="">-- בחר קבוצה --</option>`;
