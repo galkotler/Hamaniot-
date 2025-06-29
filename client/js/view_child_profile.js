@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // מנהל – הצגת כפתורי עריכה, מחיקה, שיבוץ
     if (role === "admin") {
-      document.getElementById("editBtn").href = `edit_child.html?id=${childId}`;
+      document.getElementById("editBtn").href = `profile_edit.html?id=${childId}`;
       document.getElementById("editBtn").style.display = "inline-block";
 
       // כפתור מחיקה
